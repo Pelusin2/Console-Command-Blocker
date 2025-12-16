@@ -1,0 +1,9 @@
+name: ConsoleCommandBlocker
+version: 1.0
+main: com.pau.consolecommandblocker.Main
+api-version: 1.20
+commands:
+  ccblocker:
+    description: Reload command for ConsoleCommandBlocker
+    usage: /<command> reload
+    permission: ccblocker.reload

@@ -1,0 +1,4 @@
+Blocked_commands:
+  - "gamemode"
+  - "minecraft:gamemode"
+  - "gm"

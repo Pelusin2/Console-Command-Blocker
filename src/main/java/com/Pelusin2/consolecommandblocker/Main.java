@@ -1,4 +1,4 @@
-package com.pau.consolecommandblocker;
+package com.Pelusin2.consolecommandblocker;
 
 import java.util.List;
 import java.util.Locale;

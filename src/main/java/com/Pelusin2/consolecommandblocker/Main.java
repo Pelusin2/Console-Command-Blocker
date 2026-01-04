@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Locale;
 
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -24,10 +23,30 @@ public class Main extends JavaPlugin implements Listener {
 
         Bukkit.getPluginManager().registerEvents(this, this);
 
+        registerCommands(); // <-- importante
+
         if (isSpanish) {
             getLogger().info("Console Command Blocker cargado. Idioma detectado: Español.");
         } else {
             getLogger().info("Console Command Blocker loaded. Detected language: " + Locale.getDefault().getLanguage());
+        }
+    }
+
+    private void registerCommands() {
+        var command = new org.bukkit.command.Command("ccblocker") {
+            @Override
+            public boolean execute(CommandSender sender, String label, String[] args) {
+                return onCommand(sender, this, label, args);
+            }
+        };
+
+        try {
+            var commandMapField = Bukkit.getServer().getClass().getDeclaredField("commandMap");
+            commandMapField.setAccessible(true);
+            var commandMap = (org.bukkit.command.CommandMap) commandMapField.get(Bukkit.getServer());
+            commandMap.register("ccblocker", command);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -54,30 +73,5 @@ public class Main extends JavaPlugin implements Listener {
                 return;
             }
         }
-    }
-
-    @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (command.getName().equalsIgnoreCase("ccblocker")) {
-            if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
-                reloadConfig();
-                loadConfigData();
-
-                if (isSpanish) {
-                    sender.sendMessage("§aCCBlocker: Configuración recargada correctamente.");
-                } else {
-                    sender.sendMessage("§aCCBlocker: Configuration reloaded successfully.");
-                }
-                return true;
-            } else {
-                if (isSpanish) {
-                    sender.sendMessage("§cUso: /CCBlocker reload");
-                } else {
-                    sender.sendMessage("§cUsage: /CCBlocker reload");
-                }
-                return true;
-            }
-        }
-        return false;
     }
 }
